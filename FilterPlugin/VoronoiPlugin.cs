@@ -11,6 +11,7 @@ using Pluto;
 
 namespace Plugin
 {
+    [Category("CL.Wang")]
 	[PluginType( PluginCategory.Filter )]
 	public partial class VoronoiPlugin : Form, ICommonPlugin
 	{
@@ -52,43 +53,46 @@ namespace Plugin
 				return ( null );
 			}
 
-            Mist.MistArray originImage = dataManager.Active;
+            Mist.MistArray renalData = dataManager.Active;
             int index = dataManager.IndexOf(dataManager.Active);
 
             if (dataManager.Count <= index + 1)
                 return null;
 
-            Mist.MistArray maskImage = dataManager[index + 1];
-            if (maskImage == null)
+            Mist.MistArray vesselData = dataManager[index + 1];
+            if (vesselData == null)
                 return null;
 
+            Mist.MistArray outputData = new Mist.MistArray(renalData.Size1, renalData.Size2, renalData.Size3,
+                                                           renalData.Reso1, renalData.Reso2, renalData.Reso3);
+            outputData.Fill(0);
+
             //Get the click point.
-//            Vector3 clickPoint = new Vector3(0, 0, 0);
-//            iPluto.GetClickPosition(ref clickPoint);
-//            Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
+           Vector3 clickPoint = new Vector3(0, 0, 0);
+           iPluto.GetClickPosition(ref clickPoint);
+           Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
 
 			// Form を表示する．
 			if( this.ShowDialog( ) == DialogResult.OK )
 			{
 				// しきい値を設定する．
-				int radius = ( int )this.numericRadius.Value;
+				int depth = ( int )this.numericDepth.Value;
 
 				// しきい値処理を行う．
-				if( CppRun( originImage.Image, maskImage.Image, radius ) == false )
+				if( CppRun( renalData.Image, vesselData.Image, outputData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, depth ) == false )
 				{
 					return ( null );
 				}
 
 				// 出力画像を DataManager へ追加する．
-				if( dataManager.Add( maskImage, false, true ) < 0 )
+				if( dataManager.Add( outputData, false, true ) < 0 )
 				{
-					// 追加に失敗したら，出力画像のリソースを開放する．
-					maskImage.Dispose( );
+                    outputData.Dispose();
 					return ( null );
 				}
 				else
 				{
-					return ( maskImage );
+					return ( vesselData );
 				}
 			}
 
@@ -109,6 +113,6 @@ namespace Plugin
 		#endregion
 
 		[DllImport( "VoronoiCpp.dll", EntryPoint="Run" )]
-		internal static extern bool CppRun( IntPtr pCT, IntPtr pMK, int radius );
+		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr output, double x, double y, double z, int depth );
 	}
 }

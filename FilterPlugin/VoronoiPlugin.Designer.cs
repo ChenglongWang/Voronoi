@@ -31,8 +31,8 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.label = new System.Windows.Forms.Label();
-            this.numericRadius = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numericRadius)).BeginInit();
+            this.numericDepth = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -65,20 +65,20 @@
             this.label.TabIndex = 20;
             this.label.Text = "Depth:";
             // 
-            // numericRadius
+            // numericDepth
             // 
-            this.numericRadius.Location = new System.Drawing.Point(56, 7);
-            this.numericRadius.Maximum = new decimal(new int[] {
+            this.numericDepth.Location = new System.Drawing.Point(56, 7);
+            this.numericDepth.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericRadius.Name = "numericRadius";
-            this.numericRadius.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericRadius.Size = new System.Drawing.Size(75, 19);
-            this.numericRadius.TabIndex = 19;
-            this.numericRadius.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numericRadius.Value = new decimal(new int[] {
+            this.numericDepth.Name = "numericDepth";
+            this.numericDepth.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDepth.Size = new System.Drawing.Size(75, 19);
+            this.numericDepth.TabIndex = 19;
+            this.numericDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericDepth.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -93,13 +93,13 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label);
-            this.Controls.Add(this.numericRadius);
+            this.Controls.Add(this.numericDepth);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "VoronoiPlugin";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Voronoi";
-            ((System.ComponentModel.ISupportInitialize)(this.numericRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,6 +110,6 @@
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.Label label;
-        private System.Windows.Forms.NumericUpDown numericRadius;
+        private System.Windows.Forms.NumericUpDown numericDepth;
 	}
 }

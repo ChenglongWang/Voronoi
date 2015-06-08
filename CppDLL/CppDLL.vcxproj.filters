@@ -13,10 +13,51 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="VesselLabeling">
+      <UniqueIdentifier>{f148dc91-c80a-44d8-80a3-e6f37708faf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppRun.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VesselLabeling\artery.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\config.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\dictionary.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\graph.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\header.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\image.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\tree.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\tubular.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\vessel.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\xml.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\zconf.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
+    <ClInclude Include="VesselLabeling\zlib.h">
+      <Filter>VesselLabeling</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

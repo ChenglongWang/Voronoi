@@ -32,4 +32,5 @@
 *.opensdf
 
 obj/
+x64/
 *.suo
