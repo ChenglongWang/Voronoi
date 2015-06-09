@@ -63,9 +63,12 @@ namespace Plugin
             if (vesselData == null)
                 return null;
 
-            Mist.MistArray outputData = new Mist.MistArray(renalData.Size1, renalData.Size2, renalData.Size3,
+            Mist.MistArray voronoiData = new Mist.MistArray(renalData.Size1, renalData.Size2, renalData.Size3,
                                                            renalData.Reso1, renalData.Reso2, renalData.Reso3);
-            outputData.Fill(0);
+            Mist.MistArray labeledVesselData = new Mist.MistArray(renalData.Size1, renalData.Size2, renalData.Size3,
+                                                           renalData.Reso1, renalData.Reso2, renalData.Reso3);
+            voronoiData.Fill(0);
+            labeledVesselData.Fill(0);
 
             //Get the click point.
            Vector3 clickPoint = new Vector3(0, 0, 0);
@@ -79,21 +82,23 @@ namespace Plugin
 				int depth = ( int )this.numericDepth.Value;
 
 				// しきい値処理を行う．
-				if( CppRun( renalData.Image, vesselData.Image, outputData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, depth ) == false )
+				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, depth ) == false )
 				{
 					return ( null );
 				}
 
 				// 出力画像を DataManager へ追加する．
-				if( dataManager.Add( outputData, false, true ) < 0 )
+				if( dataManager.Add( voronoiData, true, true ) < 0 )
 				{
-                    outputData.Dispose();
+                    voronoiData.Dispose();
 					return ( null );
 				}
-				else
-				{
-					return ( vesselData );
-				}
+                
+                if( dataManager.Add( labeledVesselData, false, true) < 0)
+                {
+                    labeledVesselData.Dispose();
+                    return null;
+                }
 			}
 
 			return ( null );
@@ -113,6 +118,6 @@ namespace Plugin
 		#endregion
 
 		[DllImport( "VoronoiCpp.dll", EntryPoint="Run" )]
-		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr output, double x, double y, double z, int depth );
+		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int depth );
 	}
 }

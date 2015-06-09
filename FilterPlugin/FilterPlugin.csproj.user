@@ -13,4 +13,9 @@
   <PropertyGroup>
     <ReferencePath>C:\Users\cwang\Documents\Third library\PLUTO-1.0.0-rev1806\x86\;C:\Users\cwang\Documents\Third library\mist-v1.6.0\mist\</ReferencePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\cwang\Documents\Third library\PLUTO-1.0.0-rev1806\x64\Pluto.exe</StartProgram>
+  </PropertyGroup>
 </Project>
