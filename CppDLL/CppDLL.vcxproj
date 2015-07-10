@@ -158,6 +158,7 @@
     <ClCompile Include="CppRun.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="myVoronoi.h" />
     <ClInclude Include="VesselLabeling\artery.h" />
     <ClInclude Include="VesselLabeling\config.h" />
     <ClInclude Include="VesselLabeling\dictionary.h" />

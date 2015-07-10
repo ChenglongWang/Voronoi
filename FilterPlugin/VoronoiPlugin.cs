@@ -70,19 +70,22 @@ namespace Plugin
             voronoiData.Fill(0);
             labeledVesselData.Fill(0);
 
-            //Get the click point.
-           Vector3 clickPoint = new Vector3(0, 0, 0);
-           iPluto.GetClickPosition(ref clickPoint);
-           Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
-
 			// Form を表示する．
 			if( this.ShowDialog( ) == DialogResult.OK )
 			{
-				// しきい値を設定する．
 				int depth = ( int )this.numericDepth.Value;
+                int kidneyValue = (int)this.numericKidneyValue.Value;
+                bool manualRoot = (bool)this.checkBoxRoot.Checked;
 
-				// しきい値処理を行う．
-				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, depth ) == false )
+                Vector3 clickPoint = new Vector3(0, 0, 0);
+                if(manualRoot == true)
+                {
+                    //Get the click point.
+                    iPluto.GetClickPosition(ref clickPoint);
+                    //Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
+                }
+
+				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, kidneyValue, depth, manualRoot ) == false )
 				{
 					return ( null );
 				}
@@ -118,6 +121,6 @@ namespace Plugin
 		#endregion
 
 		[DllImport( "VoronoiCpp.dll", EntryPoint="Run" )]
-		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int depth );
+		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int kidneyValue, int depth, bool manualRoot );
 	}
 }

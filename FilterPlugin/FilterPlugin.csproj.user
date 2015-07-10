@@ -18,4 +18,9 @@
     <StartAction>Program</StartAction>
     <StartProgram>C:\Users\cwang\Documents\Third library\PLUTO-1.0.0-rev1806\x64\Pluto.exe</StartProgram>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\cwang\Documents\Third library\PLUTO-1.0.0-rev1806\x64\Pluto.exe</StartProgram>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+  </PropertyGroup>
 </Project>
