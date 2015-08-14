@@ -100,6 +100,14 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 	return true;
 }
 
+void GetChild(const tmatsu::artery::Tree& tree, tmatsu::artery::Tree::iterator node)
+{
+	for (auto iter = tree.child_begin(node); iter != tree.child_end(node); ++iter)
+	{
+	
+	}
+}
+
 void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu::artery::Tree &tree, int vesselValue)
 {
 	int labels(vesselValue);
@@ -132,12 +140,24 @@ void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu:
 	for_each(seedNodes.begin(), seedNodes.end(), [&](tmatsu::artery::Tree::iterator node){
 		if (node.node() != NULL)
 		{
-			for (auto iter = tree.child_begin(node); iter != tree.child_end(node); ++iter)
-			{
-				iter->name = tmatsu::artery::Name(labels);
-			}
-			node->name = tmatsu::artery::Name(labels);
+			std::deque<tmatsu::artery::Tree::iterator> childList;
+			childList.push_back(node);
 
+			while (!childList.empty())
+			{
+				auto currNode = childList.front();
+				childList.pop_front();
+
+				for (auto iter = tree.child_begin(currNode); iter != tree.child_end(currNode); ++iter)
+				{
+					if (iter.node()->eldest_child)
+						childList.push_back(iter);
+
+					iter->name = tmatsu::artery::Name(labels);
+				}
+				currNode->name = tmatsu::artery::Name(labels);
+			}
+			
 			labels++;
 		}
 	});
@@ -175,7 +195,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 	mist::array3<short> vessel_closed(*vesselData);
 #ifndef _DEBUG
 	mist::dilation(vessel_closed, 1);
-	mist::closing(vessel_closed, 4);
+	mist::closing(vessel_closed, 5);
 #endif
 	
 
