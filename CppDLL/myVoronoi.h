@@ -177,7 +177,7 @@ void calc_volume(const mist::array3 < short > &img, const std::vector<short>& la
 // 対象領域:128、ラベル：1,2、3、4,....
 // 各ラベルの値の連結成分を母点としてボロノイ分割
 // img：入力画像、out：出力画像、num：ラベル数
-bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& vessels, mist::array3 < short > &out, int num, int organValue)
+bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& vessels, mist::array3 < short > &out, int num, int organValue, int vesselValue)
 {
 	if (img.size1() != vessels.size1() ||
 		img.size2() != vessels.size2() ||
@@ -191,12 +191,12 @@ bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& ve
 	double zr = img.reso3();
 
 	//Caluate voi size
-	size_t voi_x0(INT_MAX), voi_x1(0), voi_y0(INT_MAX), voi_y1(0), voi_z0(INT_MAX), voi_z1(0);
-	for (size_t k = 0; k < img.depth(); ++k)
+	int voi_x0(INT_MAX), voi_x1(0), voi_y0(INT_MAX), voi_y1(0), voi_z0(INT_MAX), voi_z1(0);
+	for (int k = 0; k < img.depth(); ++k)
 	{
-		for (size_t j = 0; j < img.height(); ++j)
+		for (int j = 0; j < img.height(); ++j)
 		{
-			for (size_t i = 0; i < img.width(); ++i)
+			for (int i = 0; i < img.width(); ++i)
 			{
 				if (img(i, j, k) == area)
 				{
@@ -219,7 +219,7 @@ bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& ve
 	voi_z0 = (voi_z0 - 2) > 0 ? voi_z0 - 2 : 0;
 	voi_z1 = (voi_z1 + 2) < (img.size3() - 1) ? voi_z1 + 2 : (img.size3() - 1);
 
-	short value(VESSEL_LABEL);
+	short value(vesselValue);
 	std::vector<short> values;
 	std::vector< mist::vector3<double> > pts;
 	std::map<short, std::vector< mist::vector3<double> >> gp;

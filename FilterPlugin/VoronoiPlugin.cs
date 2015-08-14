@@ -32,7 +32,7 @@ namespace Plugin
 
         string IPlugin.Text { get { return ("Voronoi"); } }
 
-        string IPlugin.Comment { get { return ("Voronoi Cluster Plugin"); } }
+        string IPlugin.Comment { get { return ("Voronoi Diagram. Select active data as tissue region, and the upper data is vessel data."); } }
 
 		bool IPlugin.Initialize( DataManager data, IPluto pluto )
 		{
@@ -74,7 +74,8 @@ namespace Plugin
 			if( this.ShowDialog( ) == DialogResult.OK )
 			{
 				int depth = ( int )this.numericDepth.Value;
-                int kidneyValue = (int)this.numericKidneyValue.Value;
+                int kidneyValue = (int)this.numericKidneyLabel.Value;
+                int vesselValue = (int)this.numericVesselLabel.Value;
                 bool manualRoot = (bool)this.checkBoxRoot.Checked;
 
                 Vector3 clickPoint = new Vector3(0, 0, 0);
@@ -84,8 +85,8 @@ namespace Plugin
                     iPluto.GetClickPosition(ref clickPoint);
                     //Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
                 }
-
-				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPoint.X, clickPoint.Y, clickPoint.Z, kidneyValue, depth, manualRoot ) == false )
+                Vector3 clickPointIJK = new Vector3(clickPoint.X / voronoiData.Reso1, clickPoint.Y / voronoiData.Reso2, clickPoint.Z / voronoiData.Reso3);
+				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPointIJK.X, clickPointIJK.Y, clickPointIJK.Z, kidneyValue, vesselValue, depth, manualRoot ) == false )
 				{
 					return ( null );
 				}
@@ -121,6 +122,6 @@ namespace Plugin
 		#endregion
 
 		[DllImport( "VoronoiCpp.dll", EntryPoint="Run" )]
-		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int kidneyValue, int depth, bool manualRoot );
+		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot );
 	}
 }
