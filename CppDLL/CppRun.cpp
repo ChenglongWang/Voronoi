@@ -11,7 +11,7 @@
 
 extern "C"
 {
-	__declspec(dllexport) bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* voronoiData, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot);
+	__declspec(dllexport) bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* voronoiData, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot, bool upper);
 }
 
 typedef mist::vector3< int > position_type;
@@ -32,7 +32,7 @@ inline size_t ComputeId(int i, int j, int k, int dim_x, int dim_y, int dim_z)
 	return (static_cast<size_t>(k)*dim_y + j)*dim_x + i;
 }
 
-bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, tmatsu::artery::Tree& tree, std::vector<tmatsu::artery::Tree::iterator>& seedNodes)
+bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, tmatsu::artery::Tree& tree, std::vector<tmatsu::artery::Tree::iterator>& seedNodes, bool upper)
 {
 	mist::array3<short> renalAreaContour(*kidneyData); //kidney surface
 	mist::dilation(renalAreaContour, 1);
@@ -97,6 +97,45 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 		if (treeCrossNode[i].node() != NULL)
 			seedNodes.push_back(treeCrossNode[i]);
 	}
+
+	//Upper flag. move seed nodes to upper tree level.
+	if (upper)
+	{
+		std::list<tmatsu::artery::Tree::iterator> seedList(seedNodes.begin(), seedNodes.end());
+		for (auto iter = seedList.begin(); iter != seedList.end();)
+		{
+			auto parent = tree.parent(*iter);
+			auto nextIter = iter;
+			nextIter++;
+
+			bool notFound(true);
+			while (nextIter != seedList.end() && notFound)
+			{
+				if (tree.parent(*nextIter) == parent)
+				{
+					iter = seedList.erase(iter);
+					if (iter != nextIter)
+					{
+						nextIter = seedList.erase(nextIter);
+					}
+					else
+					{
+						iter = seedList.erase(iter);
+					}
+					notFound = false;
+				}
+				else
+				{
+					++nextIter;
+				}
+			}
+			if (notFound)
+			{
+				++iter;
+			}
+			
+		}
+	}
 	return true;
 }
 
@@ -108,7 +147,35 @@ void GetChild(const tmatsu::artery::Tree& tree, tmatsu::artery::Tree::iterator n
 	}
 }
 
-void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu::artery::Tree &tree, int vesselValue)
+//Get each node centerline, return points
+void GetCenterPoints(std::vector<tmatsu::artery::Tree::iterator>& nodes, std::vector<mist::vector3<size_t>>& points)
+{
+	points.clear();
+
+	for_each(nodes.begin(), nodes.end(), [&points](tmatsu::artery::Tree::iterator& iter){
+		auto pt = iter->value.start_pt;
+		auto path = iter->value.path;
+		for_each(path.begin(), path.end(), [&](size_t offset){
+			pt += tmatsu::TOPOLOGICAL(neighborhood)[offset];
+			points.push_back(pt);
+		});
+	});
+}
+
+// Check whether the points are inside of kidney area.
+bool withInMask(const mist::array3<short>& kidneyMask, const std::vector<mist::vector3<size_t>>& points)
+{
+	for (size_t i = 0; i < points.size(); ++i)
+	{
+		if (0 != kidneyMask(points[i].x, points[i].y, points[i].z))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void LabelVessel(const mist::array3<short>& kidneyData, std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu::artery::Tree &tree, int vesselValue)
 {
 	int labels(vesselValue);
 
@@ -141,7 +208,9 @@ void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu:
 		if (node.node() != NULL)
 		{
 			std::deque<tmatsu::artery::Tree::iterator> childList;
+			std::vector<tmatsu::artery::Tree::iterator> children;
 			childList.push_back(node);
+			children.push_back(node);
 
 			while (!childList.empty())
 			{
@@ -152,12 +221,23 @@ void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu:
 				{
 					if (iter.node()->eldest_child)
 						childList.push_back(iter);
+					children.push_back(iter);
 
-					iter->name = tmatsu::artery::Name(labels);
+//					iter->name = tmatsu::artery::Name(labels);
 				}
-				currNode->name = tmatsu::artery::Name(labels);
+//				currNode->name = tmatsu::artery::Name(labels);
 			}
 			
+			//Only label vessels inside/connect to the kidney area.
+			std::vector<mist::vector3<size_t>> points;
+			GetCenterPoints(children, points);
+			if (withInMask(kidneyData, points))
+			{
+				for_each(children.begin(), children.end(), [labels](tmatsu::artery::Tree::iterator& node){
+					node->name = tmatsu::artery::Name(labels);
+				});
+			}
+
 			labels++;
 		}
 	});
@@ -177,7 +257,7 @@ void LabelOrgan(const mist::array3<short>& labeledVessels, mist::array3<short>& 
 /*Voronoi transform need renal part mask input, and vessel data. 
 {x,y,z} is a point closet to the root point of the vessel. Depth is the search depth 
 of the vessel tree*/
-bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* out, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool mannulRoot)
+bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* out, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool mannulRoot, bool upper)
 {
 	if (kidneyData->size() != vesselData->size() ||
 		kidneyData->size1() != vesselData->size1() ||
@@ -206,7 +286,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 	std::vector<tmatsu::artery::Tree::iterator> seedNodes;
 	if (depth == 0)
 	{
-		if (!NormalVoronoiMode(kidneyData, vesselData, tree, seedNodes))
+		if (!NormalVoronoiMode(kidneyData, vesselData, tree, seedNodes, upper))
 			return false;
 	}
 	else
@@ -220,7 +300,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 		}
 	}
 
-	LabelVessel(seedNodes, tree, vesselValue);
+	LabelVessel(*kidneyData, seedNodes, tree, vesselValue);
 
 	tmatsu::artery::LabelImage labelVesselImage;
 	tree.restore(*vesselData, labelVesselImage);
@@ -230,7 +310,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 //	LabelOrgan(*labeledVessel, voronoiData);
 
 //	mist::euclidean::voronoi_transform(*voronoiData);
-	myvoronoi(*kidneyData, *labeledVessel, *out, seedNodes.size(), kidneyValue, vesselValue);
+//	myvoronoi(*kidneyData, *labeledVessel, *out, seedNodes.size(), kidneyValue, vesselValue);
 
 	vessel.clear();
 	centerline.clear();

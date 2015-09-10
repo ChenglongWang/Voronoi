@@ -1,26 +1,26 @@
-#ifndef __KIDNEY_DIVIDE_VORONOI_HEADER__
+ï»¿#ifndef __KIDNEY_DIVIDE_VORONOI_HEADER__
 #define __KIDNEY_DIVIDE_VORONOI_HEADER__
 
 #include <algorithm>
 #include <fstream>
 
 
-// ‹——£’l‚ğŠi”[‚µ‚½”z—ñ’†‚©‚çÅ¬’l‚ğæ“¾
-// ”z—ñ‚Íƒ‰ƒxƒ‹’l‡‚É•À‚ñ‚Å‚¢‚é‚Ì‚ÅA‚»‚Ì‡”Ô‚ğ•Ô‚·
+// è·é›¢å€¤ã‚’æ ¼ç´ã—ãŸé…åˆ—ä¸­ã‹ã‚‰æœ€å°å€¤ã‚’å–å¾—
+// é…åˆ—ã¯ãƒ©ãƒ™ãƒ«å€¤é †ã«ä¸¦ã‚“ã§ã„ã‚‹ã®ã§ã€ãã®é †ç•ªã‚’è¿”ã™
 int calc_min(mist::array <double > value)
 {
 	int ret = -1;
 
-	// ƒ\[ƒg‘O‚É‡”Ô‚ğ•Û‚·‚é‚½‚ß”z—ñ‚ğƒRƒs[
+	// ã‚½ãƒ¼ãƒˆå‰ã«é †ç•ªã‚’ä¿æŒã™ã‚‹ãŸã‚é…åˆ—ã‚’ã‚³ãƒ”ãƒ¼
 	mist::array < double > tmp = value;
 
-	// ¬‚³‚¢‡‚Éƒ\[ƒg
+	// å°ã•ã„é †ã«ã‚½ãƒ¼ãƒˆ
 	std::sort(value.begin(), value.end(), std::less<double>());
 
-	// Å¬’l‚ğæ“¾
+	// æœ€å°å€¤ã‚’å–å¾—
 	double min = value.at(0);
 
-	// Å¬’l‚Ì”Ô†‚ğ’²‚×‚é
+	// æœ€å°å€¤ã®ç•ªå·ã‚’èª¿ã¹ã‚‹
 	for (int i = 0; i < value.size(); i++)
 	{
 		if (min == tmp.at(i))
@@ -30,7 +30,7 @@ int calc_min(mist::array <double > value)
 		}
 	}
 
-	// Å¬’l‚Ì”Ô†‚ğ•Ô‚·
+	// æœ€å°å€¤ã®ç•ªå·ã‚’è¿”ã™
 	return ret + 1;
 }
 
@@ -94,8 +94,8 @@ int max3(double v1, double v2, double v3)
 	return ret;
 }
 
-// “ü—Í“_“¯m‚Ì‹——£’l‘ª’è
-// “ü—ÍFÀ•WA‰ğ‘œ“xA•ê“_À•WƒŠƒXƒgimm)
+// å…¥åŠ›ç‚¹åŒå£«ã®è·é›¢å€¤æ¸¬å®š
+// å…¥åŠ›ï¼šåº§æ¨™ã€è§£åƒåº¦ã€æ¯ç‚¹åº§æ¨™ãƒªã‚¹ãƒˆï¼ˆmm)
 double distance(int x, int y, int z, double xr, double yr, double zr, mist::vector3 < double > gp)
 {
 
@@ -109,19 +109,19 @@ double distance(int x, int y, int z, double xr, double yr, double zr, mist::vect
 
 }
 
-// “ü—ÍÀ•Wi‰ğ‘œ“x•t‚«j‚Æ•ê“_ƒŠƒXƒg‚ÌŠe“_‚Ì’†‚ÅÅ¬‚Ì‹——£’l‚ğ•Ô‚·
+// å…¥åŠ›åº§æ¨™ï¼ˆè§£åƒåº¦ä»˜ãï¼‰ã¨æ¯ç‚¹ãƒªã‚¹ãƒˆã®å„ç‚¹ã®ä¸­ã§æœ€å°ã®è·é›¢å€¤ã‚’è¿”ã™
 double point_min(int x, int y, int z, double xr, double yr, double zr, std::vector < mist::vector3 < double > > gp)
 {
 	std::vector < double > dist2;
-	// ‚Ü‚¸Aƒ‰ƒxƒ‹‚²‚Æ‚ÉÅ¬‚Ì‹——£
+	// ã¾ãšã€ãƒ©ãƒ™ãƒ«ã”ã¨ã«æœ€å°ã®è·é›¢
 	for (int i = 0; i < gp.size(); i++)
 	{
-		// ‹——£’l‚ğ‘ª’è‚µ‚Ä’Ç‰Á
-		// ‹——£’l‚Í•½•ûª‚Æ‚Á‚Ä‚ ‚é
+		// è·é›¢å€¤ã‚’æ¸¬å®šã—ã¦è¿½åŠ 
+		// è·é›¢å€¤ã¯å¹³æ–¹æ ¹ã¨ã£ã¦ã‚ã‚‹
 		dist2.push_back(distance(x, y, z, xr, yr, zr, gp.at(i)));
 	}
 
-	// ‹——£’l‚ª¬‚³‚¢‡‚É•À‚Ñ‘Ö‚¦
+	// è·é›¢å€¤ãŒå°ã•ã„é †ã«ä¸¦ã³æ›¿ãˆ
 //	std::sort(dist2.begin(), dist2.end(), std::less<double>());
 	auto minElem = std::min_element(dist2.begin(), dist2.end());
 
@@ -129,7 +129,7 @@ double point_min(int x, int y, int z, double xr, double yr, double zr, std::vect
 }
 
 
-// ‘ÌÏŠ„‡‘ª’è
+// ä½“ç©å‰²åˆæ¸¬å®š
 void calc_volume(const mist::array3 < short > &img, const std::vector<short>& labels, std::string csvfile)
 {
 	int num = labels.size();
@@ -172,11 +172,11 @@ void calc_volume(const mist::array3 < short > &img, const std::vector<short>& la
 
 
 
-// ©ìƒ{ƒƒmƒC•ªŠ„
-// ƒ†[ƒNƒŠƒbƒh‹——£‚Ì‚İ
-// ‘ÎÛ—Ìˆæ:128Aƒ‰ƒxƒ‹F1,2A3A4,....
-// Šeƒ‰ƒxƒ‹‚Ì’l‚Ì˜AŒ‹¬•ª‚ğ•ê“_‚Æ‚µ‚Äƒ{ƒƒmƒC•ªŠ„
-// imgF“ü—Í‰æ‘œAoutFo—Í‰æ‘œAnumFƒ‰ƒxƒ‹”
+// è‡ªä½œãƒœãƒ­ãƒã‚¤åˆ†å‰²
+// ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰è·é›¢ã®ã¿
+// å¯¾è±¡é ˜åŸŸ:128ã€ãƒ©ãƒ™ãƒ«ï¼š1,2ã€3ã€4,....
+// å„ãƒ©ãƒ™ãƒ«ã®å€¤ã®é€£çµæˆåˆ†ã‚’æ¯ç‚¹ã¨ã—ã¦ãƒœãƒ­ãƒã‚¤åˆ†å‰²
+// imgï¼šå…¥åŠ›ç”»åƒã€outï¼šå‡ºåŠ›ç”»åƒã€numï¼šãƒ©ãƒ™ãƒ«æ•°
 bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& vessels, mist::array3 < short > &out, int num, int organValue, int vesselValue)
 {
 	if (img.size1() != vessels.size1() ||
@@ -252,20 +252,20 @@ bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& ve
 		++value;
 	}
 
-	// ƒ{ƒƒmƒC•ªŠ„ˆ—
+	// ãƒœãƒ­ãƒã‚¤åˆ†å‰²å‡¦ç†
 	for (size_t k = voi_z0; k < voi_z1; ++k)
 	{
 		for (size_t j = voi_y0; j < voi_y1; ++j)
 		{
 			for (size_t i = voi_x0; i < voi_x1; ++i)
 			{
-				// t‘Ÿ—Ìˆæã‚Ì‰æ‘f‚Ì‚İ‚Åˆ—
+				// è…è‡“é ˜åŸŸä¸Šã®ç”»ç´ ã®ã¿ã§å‡¦ç†
 				if (img.at(i, j, k) == area)
 				{
-					// Šeƒ‰ƒxƒ‹‚ÌÅ¬‹——£‚ğŠi”[—p
+					// å„ãƒ©ãƒ™ãƒ«ã®æœ€å°è·é›¢ã‚’æ ¼ç´ç”¨
 					mist::array < double > dist(num);
 
-					// ƒ‰ƒxƒ‹’l‚²‚Æ‚É‹——£’l‚ğ‘ª’è
+					// ãƒ©ãƒ™ãƒ«å€¤ã”ã¨ã«è·é›¢å€¤ã‚’æ¸¬å®š
 					for (int n = 0; n < values.size(); ++n)
 					{
 						dist.at(n) = point_min((int)i, (int)j, (int)k, xr, yr, zr, gp.at(values[n]));
@@ -274,7 +274,7 @@ bool myvoronoi(const mist::array3 < short > & img, const mist::array3<short>& ve
 					auto minIter = std::min_element(dist.begin(), dist.end());
 					auto min = std::distance(dist.begin(), minIter);
 
-					// æ“¾‚µ‚½ƒ‰ƒxƒ‹’l‚ğo—Í‰æ‘œ‚ÖŠi”[
+					// å–å¾—ã—ãŸãƒ©ãƒ™ãƒ«å€¤ã‚’å‡ºåŠ›ç”»åƒã¸æ ¼ç´
 					out(i, j, k) = values[min];
 				}
 			}

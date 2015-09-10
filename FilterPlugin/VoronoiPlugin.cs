@@ -77,6 +77,7 @@ namespace Plugin
                 int kidneyValue = (int)this.numericKidneyLabel.Value;
                 int vesselValue = (int)this.numericVesselLabel.Value;
                 bool manualRoot = (bool)this.checkBoxRoot.Checked;
+                bool upper = (bool)this.checkBoxUpper.Checked;
 
                 Vector3 clickPoint = new Vector3(0, 0, 0);
                 if(manualRoot == true)
@@ -86,7 +87,7 @@ namespace Plugin
                     //Console.Write("Click point:  {0:G}" + " {1:G}" + " {2:G}", clickPoint.X, clickPoint.Y, clickPoint.Z);
                 }
                 Vector3 clickPointIJK = new Vector3(clickPoint.X / voronoiData.Reso1, clickPoint.Y / voronoiData.Reso2, clickPoint.Z / voronoiData.Reso3);
-				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPointIJK.X, clickPointIJK.Y, clickPointIJK.Z, kidneyValue, vesselValue, depth, manualRoot ) == false )
+				if( CppRun( renalData.Image, vesselData.Image, labeledVesselData.Image, voronoiData.Image, clickPointIJK.X, clickPointIJK.Y, clickPointIJK.Z, kidneyValue, vesselValue, depth, manualRoot, upper ) == false )
 				{
 					return ( null );
 				}
@@ -122,6 +123,6 @@ namespace Plugin
 		#endregion
 
 		[DllImport( "VoronoiCpp.dll", EntryPoint="Run" )]
-		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot );
+		internal static extern bool CppRun( IntPtr renal, IntPtr vessel, IntPtr labeledVessel, IntPtr output, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot, bool upper );
 	}
 }
