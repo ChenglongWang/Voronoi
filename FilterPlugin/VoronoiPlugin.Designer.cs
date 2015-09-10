@@ -37,15 +37,18 @@
             this.numericKidneyLabel = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.numericVesselLabel = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericClosing = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKidneyLabel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericVesselLabel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericClosing)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(64, 126);
+            this.buttonCancel.Location = new System.Drawing.Point(64, 177);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(50, 23);
             this.buttonCancel.TabIndex = 21;
@@ -55,7 +58,7 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(16, 126);
+            this.buttonOK.Location = new System.Drawing.Point(16, 177);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(44, 23);
             this.buttonOK.TabIndex = 22;
@@ -89,7 +92,7 @@
             // checkBoxRoot
             // 
             this.checkBoxRoot.AutoSize = true;
-            this.checkBoxRoot.Location = new System.Drawing.Point(17, 102);
+            this.checkBoxRoot.Location = new System.Drawing.Point(17, 153);
             this.checkBoxRoot.Name = "checkBoxRoot";
             this.checkBoxRoot.Size = new System.Drawing.Size(88, 16);
             this.checkBoxRoot.TabIndex = 23;
@@ -152,12 +155,42 @@
             0,
             0});
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 12);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Closing:";
+            // 
+            // numericClosing
+            // 
+            this.numericClosing.Location = new System.Drawing.Point(54, 89);
+            this.numericClosing.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericClosing.Name = "numericClosing";
+            this.numericClosing.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericClosing.Size = new System.Drawing.Size(51, 19);
+            this.numericClosing.TabIndex = 29;
+            this.numericClosing.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericClosing.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // VoronoiPlugin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(135, 155);
+            this.ClientSize = new System.Drawing.Size(135, 209);
             this.ControlBox = false;
+            this.Controls.Add(this.numericClosing);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericVesselLabel);
             this.Controls.Add(this.labelkidney);
@@ -175,6 +208,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKidneyLabel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericVesselLabel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericClosing)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,5 +225,7 @@
         private System.Windows.Forms.NumericUpDown numericKidneyLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericVesselLabel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericClosing;
 	}
 }

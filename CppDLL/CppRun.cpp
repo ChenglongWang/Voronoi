@@ -136,7 +136,7 @@ void LabelVessel(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, tmatsu:
 		}
 	}
 
-	//Label vessels
+	//Label vessels. Label the children of current node.
 	for_each(seedNodes.begin(), seedNodes.end(), [&](tmatsu::artery::Tree::iterator node){
 		if (node.node() != NULL)
 		{
@@ -193,11 +193,6 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 
 	tmatsu::artery::Tree tree;
 	mist::array3<short> vessel_closed(*vesselData);
-#ifndef _DEBUG
-	mist::dilation(vessel_closed, 1);
-	mist::closing(vessel_closed, 5);
-#endif
-	
 
 	tmatsu::artery::CTImage vessel(vessel_closed);
 	tmatsu::artery::ThicknessImage centerline;
