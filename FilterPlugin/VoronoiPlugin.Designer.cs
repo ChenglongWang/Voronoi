@@ -39,11 +39,13 @@
             this.numericVesselLabel = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.numericClosing = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxUpper = new System.Windows.Forms.CheckBox();
+            this.numericUpper = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKidneyLabel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericVesselLabel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericClosing)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpper)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -93,7 +95,7 @@
             // checkBoxRoot
             // 
             this.checkBoxRoot.AutoSize = true;
-            this.checkBoxRoot.Location = new System.Drawing.Point(117, 64);
+            this.checkBoxRoot.Location = new System.Drawing.Point(119, 66);
             this.checkBoxRoot.Name = "checkBoxRoot";
             this.checkBoxRoot.Size = new System.Drawing.Size(88, 16);
             this.checkBoxRoot.TabIndex = 23;
@@ -184,15 +186,28 @@
             0,
             0});
             // 
-            // checkBoxUpper
+            // numericUpper
             // 
-            this.checkBoxUpper.AutoSize = true;
-            this.checkBoxUpper.Location = new System.Drawing.Point(14, 64);
-            this.checkBoxUpper.Name = "checkBoxUpper";
-            this.checkBoxUpper.Size = new System.Drawing.Size(54, 16);
-            this.checkBoxUpper.TabIndex = 30;
-            this.checkBoxUpper.Text = "Upper";
-            this.checkBoxUpper.UseVisualStyleBackColor = true;
+            this.numericUpper.Location = new System.Drawing.Point(54, 65);
+            this.numericUpper.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpper.Name = "numericUpper";
+            this.numericUpper.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericUpper.Size = new System.Drawing.Size(51, 19);
+            this.numericUpper.TabIndex = 31;
+            this.numericUpper.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 68);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 12);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Upper:";
             // 
             // VoronoiPlugin
             // 
@@ -200,7 +215,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(209, 141);
             this.ControlBox = false;
-            this.Controls.Add(this.checkBoxUpper);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.numericUpper);
             this.Controls.Add(this.numericClosing);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -221,6 +237,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericKidneyLabel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericVesselLabel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericClosing)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpper)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -239,6 +256,7 @@
         private System.Windows.Forms.NumericUpDown numericVesselLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericClosing;
-        private System.Windows.Forms.CheckBox checkBoxUpper;
+        private System.Windows.Forms.NumericUpDown numericUpper;
+        private System.Windows.Forms.Label label3;
 	}
 }

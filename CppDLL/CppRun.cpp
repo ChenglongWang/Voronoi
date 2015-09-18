@@ -11,7 +11,7 @@
 
 extern "C"
 {
-	__declspec(dllexport) bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* voronoiData, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot, bool upper);
+	__declspec(dllexport) bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* voronoiData, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool manualRoot, int upperLevel);
 }
 
 typedef mist::vector3< int > position_type;
@@ -32,7 +32,50 @@ inline size_t ComputeId(int i, int j, int k, int dim_x, int dim_y, int dim_z)
 	return (static_cast<size_t>(k)*dim_y + j)*dim_x + i;
 }
 
-bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, tmatsu::artery::Tree& tree, std::vector<tmatsu::artery::Tree::iterator>& seedNodes, bool upper)
+void MergeLeaves(std::vector<tmatsu::artery::Tree::iterator> &seedNodes, const tmatsu::artery::Tree &tree)
+{
+	std::list<tmatsu::artery::Tree::iterator> seedList(seedNodes.begin(), seedNodes.end());
+	seedNodes.clear();
+
+	for (auto iter = seedList.begin(); iter != seedList.end();)
+	{
+		auto parent = tree.parent(*iter);
+		auto nextIter = iter;
+		nextIter++;
+
+		bool notFound(true);
+		while (nextIter != seedList.end() && notFound)
+		{
+			if (tree.parent(*nextIter) == parent)
+			{
+				iter = seedList.erase(iter);
+				if (iter != nextIter)
+				{
+					nextIter = seedList.erase(nextIter);
+				}
+				else
+				{
+					iter = seedList.erase(iter);
+				}
+				seedNodes.push_back(parent);
+				notFound = false;
+			}
+			else
+			{
+				++nextIter;
+			}
+		}
+		if (notFound)
+		{
+			++iter;
+		}
+
+	}
+
+	seedNodes.insert(seedNodes.end(), seedList.begin(), seedList.end());
+}
+
+bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, tmatsu::artery::Tree& tree, std::vector<tmatsu::artery::Tree::iterator>& seedNodes, int upperLevel)
 {
 	mist::array3<short> renalAreaContour(*kidneyData); //kidney surface
 	mist::dilation(renalAreaContour, 1);
@@ -99,47 +142,12 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 	}
 
 	//Upper flag. move seed nodes to upper tree level.
-	if (upper)
+	if (upperLevel != 0)
 	{
-		std::list<tmatsu::artery::Tree::iterator> seedList(seedNodes.begin(), seedNodes.end());
-		seedNodes.clear();
-
-		for (auto iter = seedList.begin(); iter != seedList.end();)
+		for (int i = 0; i < upperLevel; ++i)
 		{
-			auto parent = tree.parent(*iter);
-			auto nextIter = iter;
-			nextIter++;
-
-			bool notFound(true);
-			while (nextIter != seedList.end() && notFound)
-			{
-				if (tree.parent(*nextIter) == parent)
-				{
-					iter = seedList.erase(iter);
-					if (iter != nextIter)
-					{
-						nextIter = seedList.erase(nextIter);
-					}
-					else
-					{
-						iter = seedList.erase(iter);
-					}
-					seedNodes.push_back(parent);
-					notFound = false;
-				}
-				else
-				{
-					++nextIter;
-				}
-			}
-			if (notFound)
-			{
-				++iter;
-			}
-			
+			MergeLeaves(seedNodes, tree);
 		}
-
-		seedNodes.insert(seedNodes.end(), seedList.begin(), seedList.end());
 	}
 	return true;
 }
@@ -262,7 +270,7 @@ void LabelOrgan(const mist::array3<short>& labeledVessels, mist::array3<short>& 
 /*Voronoi transform need renal part mask input, and vessel data. 
 {x,y,z} is a point closet to the root point of the vessel. Depth is the search depth 
 of the vessel tree*/
-bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* out, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool mannulRoot, bool upper)
+bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesselData, mist::array3<short>* labeledVessel, mist::array3<short>* out, double x, double y, double z, int kidneyValue, int vesselValue, int depth, bool mannulRoot, int upperLevel)
 {
 	if (kidneyData->size() != vesselData->size() ||
 		kidneyData->size1() != vesselData->size1() ||
@@ -291,7 +299,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 	std::vector<tmatsu::artery::Tree::iterator> seedNodes;
 	if (depth == 0)
 	{
-		if (!NormalVoronoiMode(kidneyData, vesselData, tree, seedNodes, upper))
+		if (!NormalVoronoiMode(kidneyData, vesselData, tree, seedNodes, upperLevel))
 			return false;
 	}
 	else
@@ -315,7 +323,7 @@ bool Run(const mist::array3<short> *kidneyData, const mist::array3<short> *vesse
 //	LabelOrgan(*labeledVessel, voronoiData);
 
 //	mist::euclidean::voronoi_transform(*voronoiData);
-//	myvoronoi(*kidneyData, *labeledVessel, *out, seedNodes.size(), kidneyValue, vesselValue);
+	myvoronoi(*kidneyData, *labeledVessel, *out, seedNodes.size(), kidneyValue, vesselValue);
 
 	vessel.clear();
 	centerline.clear();
