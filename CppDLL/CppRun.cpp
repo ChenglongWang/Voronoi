@@ -102,6 +102,8 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 	if (upper)
 	{
 		std::list<tmatsu::artery::Tree::iterator> seedList(seedNodes.begin(), seedNodes.end());
+		seedNodes.clear();
+
 		for (auto iter = seedList.begin(); iter != seedList.end();)
 		{
 			auto parent = tree.parent(*iter);
@@ -122,6 +124,7 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 					{
 						iter = seedList.erase(iter);
 					}
+					seedNodes.push_back(parent);
 					notFound = false;
 				}
 				else
@@ -135,6 +138,8 @@ bool NormalVoronoiMode(const mist::array3<short> *kidneyData, const mist::array3
 			}
 			
 		}
+
+		seedNodes.insert(seedNodes.end(), seedList.begin(), seedList.end());
 	}
 	return true;
 }
